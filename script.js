@@ -1,53 +1,93 @@
-var choices = ["rock", "paper", "scissors"];
-var humanScore = 0;
-var computerScore = 0;
-var ties = 0;
-var scoreDisplay = document.getElementById("score");
-var resultText = document.getElementById("result-text");
-var buttons = document.querySelectorAll("[data-choice]");
-var resetButton = document.getElementById("reset");
+const playerScoreElem = document.getElementById('player-score');
+const computerScoreElem = document.getElementById('computer-score');
+const resultText = document.getElementById('result-text');
+const choiceButtons = document.querySelectorAll('.choice-button');
+const playAgainBtn = document.querySelector('.play-again-button');
+
+
+let playerScore = 0;
+let computerScore = 0;
+let gameOver = false;
+
+playAgainBtn.textContent = 'Play Again';
+playAgainBtn.className = 'play-again-button';
+playAgainBtn.style.display = 'none';
+document.querySelector('.play-again-container').appendChild(playAgainBtn);
+
+choiceButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    if (gameOver) return;
+
+    const playerChoice = button.dataset.choice;
+    const computerChoice = getComputerChoice();
+    const result = determineWinner(playerChoice, computerChoice);
+    updateScores(result);
+    displayResult(result, playerChoice, computerChoice);
+
+    if (playerScore === 5 || computerScore === 5) {
+      gameOver = true;
+      displayFinalResult();
+    }
+  });
+});
+
+playAgainBtn.addEventListener('click', () => {
+  playerScore = 0;
+  computerScore = 0;
+  gameOver = false;
+  playerScoreElem.textContent = playerScore;
+  computerScoreElem.textContent = computerScore;
+  resultText.textContent = 'Make your move!';
+  playAgainBtn.style.display = 'none';
+});
+
 function getComputerChoice() {
-    return choices[Math.floor(Math.random() * choices.length)];
+  const choices = ['rock', 'paper', 'scissors'];
+  return choices[Math.floor(Math.random() * choices.length)];
 }
-function playRound(humanChoice, computerChoice) {
-    if (humanChoice === computerChoice) {
-        ties++;
-        return "Tie! You both chose ".concat(humanChoice, ".");
-    }
-    var win = (humanChoice === "rock" && computerChoice === "scissors") ||
-        (humanChoice === "paper" && computerChoice === "rock") ||
-        (humanChoice === "scissors" && computerChoice === "paper");
-    if (win) {
-        humanScore++;
-        return "You win the round! ".concat(humanChoice, " beats ").concat(computerChoice, ".");
-    }
-    else {
-        computerScore++;
-        return "You lose the round! ".concat(computerChoice, " beats ").concat(humanChoice, ".");
-    }
+
+function determineWinner(player, computer) {
+  if (player === computer) return 'draw';
+  if (
+    (player === 'rock' && computer === 'scissors') ||
+    (player === 'paper' && computer === 'rock') ||
+    (player === 'scissors' && computer === 'paper')
+  ) {
+    return 'player';
+  } else {
+    return 'computer';
+  }
 }
-function updateDisplay(result) {
-    resultText.textContent = result;
-    scoreDisplay.textContent = "You: ".concat(humanScore, " | Computer: ").concat(computerScore, " | Ties: ").concat(ties);
-    if (humanScore === 5 || computerScore === 5) {
-        var winner = humanScore === 5 ? "You win the game!" : "Computer wins the game!";
-        resultText.textContent = winner;
-        buttons.forEach(function (btn) { return btn.setAttribute("disabled", "true"); });
-    }
+
+function updateScores(winner) {
+  if (winner === 'player') {
+    playerScore++;
+    playerScoreElem.textContent = playerScore;
+  } else if (winner === 'computer') {
+    computerScore++;
+    computerScoreElem.textContent = computerScore;
+  }
 }
-buttons.forEach(function (button) {
-    button.addEventListener("click", function () {
-        var humanChoice = button.getAttribute("data-choice");
-        var computerChoice = getComputerChoice();
-        var result = playRound(humanChoice, computerChoice);
-        updateDisplay(result);
-    });
-});
-resetButton.addEventListener("click", function () {
-    humanScore = 0;
-    computerScore = 0;
-    ties = 0;
-    resultText.textContent = "Make your move!";
-    scoreDisplay.textContent = "You: 0 | Computer: 0 | Ties: 0";
-    buttons.forEach(function (btn) { return btn.removeAttribute("disabled"); });
-});
+
+function displayResult(winner, playerChoice, computerChoice) {
+  if (winner === 'draw') {
+    resultText.textContent = `It's a draw! You both chose ${playerChoice}.`;
+  } else if (winner === 'player') {
+    resultText.textContent = `You win! ${capitalize(playerChoice)} beats ${computerChoice}.`;
+  } else {
+    resultText.textContent = `You lose! ${capitalize(computerChoice)} beats ${playerChoice}.`;
+  }
+}
+
+function displayFinalResult() {
+  if (playerScore === 5) {
+    resultText.textContent = '🎉 You won the game!';
+  } else {
+    resultText.textContent = '😞 Computer won the game!';
+  }
+  playAgainBtn.style.display = 'block';
+}
+
+function capitalize(word) {
+  return word.charAt(0).toUpperCase() + word.slice(1);
+}

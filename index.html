@@ -1,27 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rock Paper Scissors</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rock Paper Scissors</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="container">
-        <h1>Rock Paper Scissors</h1>
-        <div class="scoreboard">
-            <p id="score">You: 0 | Computer: 0 | Ties: 0</p>
-        </div>
-        <div class="buttons">
-            <button data-choice="rock">Rock</button>
-            <button data-choice="paper">Paper</button>
-            <button data-choice="scissors">Scissors</button>
-        </div>
-        <div class="result">
-            <p id="result-text">Make your move!</p>
-        </div>
-        <button id="reset">Reset Game</button>
+  <div class="game-container">
+    <h1>Rock Paper Scissors</h1>
+    <div class="scoreboard">
+      <div class="score">
+        <h2>Player</h2>
+        <p id="player-score">0</p>
+      </div>
+      <div class="score">
+        <h2>Computer</h2>
+        <p id="computer-score">0</p>
+      </div>
     </div>
-    <script src="script.js"></script>
+    <div class="choices">
+      <button class="choice-button" data-choice="rock">🪨</button>
+      <button class="choice-button" data-choice="paper">📄</button>
+      <button class="choice-button" data-choice="scissors">✂️</button>
+    </div>
+    <div class="result">
+      <p id="result-text">Make your move!</p>
+    </div>
+    <div class="play-again-container">
+        <button class="play-again-button" style="display: none;">Play Again</button>
+      </div>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
